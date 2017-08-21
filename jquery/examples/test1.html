@@ -1,0 +1,130 @@
+﻿<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>scrollLeft demo</title>
+    <style>
+        div{
+            position: relative;
+            margin:5px;
+            border: 2px solid gray;
+        }
+
+        div.switch{
+            background-color:blue;
+            width:15px;
+            height:15px;
+        }
+
+        div.lightbulb{
+            background-color:yellow;
+            width:10px;
+            height:10px;
+        }
+
+        div.clapper{
+            background-color:lightblue;
+            width:10px;
+            height:10px;
+        }
+
+        div.off{
+            border-color:black;
+        }
+        div.on{
+            border-color:red;
+        }
+
+        div#master_switch{
+            background-color:yellowgreen;
+            width:25px;
+            height:25px;
+        }
+
+    </style>
+    <script src="/jquery/js/jquery-3.2.1.js"></script>
+    <script src="/bimounlib/js/bimoun.core.js"></script>
+    <script>
+
+        var foo = function () {
+            console.log("foo");
+        };
+
+        var bar = function () {
+            console.log("bar");
+        };
+        $(document).ready(function () {
+
+            $(document).on("click", function (e) {
+                var x = e.pageX;
+                var y = e.pageY;
+                alert("x= " + x + ",y = " + y);
+            });
+
+            $("#btnHidden").on("click", function () {
+                $("div").hide();
+            });
+
+            $("#btnShow").on("click", function () {
+                $("div.hidden").show();
+            });
+
+            $("#btnpopMessagebox").on("click", function () {
+                popupMessagebox("提示", "操作成功");
+            });
+
+
+            $(".lightbulb").on("light:toggle", function (event) {
+                var light = $(this);
+                if (light.is(".on")) {
+                    light.trigger("light:off");
+                } else {
+                    light.trigger("light:on");
+                }
+            }).on("light:on", function (event) {
+                $(this).removeClass("off").addClass("on");
+            }).on("light:off", function (event) {
+                $(this).removeClass("on").addClass("off");
+            });
+
+            $(".switch, .clapper").click(function () {
+                var room = $(this).closest(".room");
+                room.find(".lightbulb").trigger("light:toggle");
+            });
+
+            $("#master_switch").click(function (e) {
+                var lightbulbs = $(".lightbulb");
+
+                // Check if any lightbulbs are on
+                if (lightbulbs.is(".on")) {
+                    lightbulbs.trigger("light:off");
+                } else {
+                    lightbulbs.trigger("light:on");
+                }
+
+                
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+    <div class="room" id="kitchen">
+        <div class="lightbulb on"></div>
+        <div class="switch"></div>
+        <div class="switch"></div>
+        <div class="clapper"></div>
+    </div>
+    <div class="room" id="bedroom">
+        <div class="lightbulb on"></div>
+        <div class="switch"></div>
+        <div class="switch"></div>
+        <div class="clapper"></div>
+    </div>
+    <div id="master_switch"></div>
+    <button id="btnHidden">隐藏</button>
+    <button id="btnShow">显示</button>
+    <button id="btnpopMessagebox">弹窗</button>
+</body>
+</html>
